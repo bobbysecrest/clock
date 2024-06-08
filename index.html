@@ -63,13 +63,11 @@
         border-radius: 8px;
         z-index: 1000;
     }
-    .settings-panel input[type="range"] {
+    .settings-panel input[type="range"],
+    .settings-panel input[type="color"],
+    .settings-panel input[type="text"],
+    .settings-panel select {
         width: 100%;
-    }
-    .settings-panel input[type="text"] {
-        width: calc(100% - 22px);
-        padding: 5px;
-        margin-top: 10px;
     }
     .settings-panel label {
         display: block;
@@ -101,6 +99,18 @@
     <input type="range" id="clockFontSize" name="clockFontSize" min="50" max="300" value="150" oninput="updateClockFontSize()">
     <label for="weatherFontSize">Weather Font Size:</label>
     <input type="range" id="weatherFontSize" name="weatherFontSize" min="20" max="100" value="40" oninput="updateWeatherFontSize()">
+    <label for="textColor">Text Color:</label>
+    <input type="color" id="textColor" name="textColor" value="#ffffff" oninput="updateTextColor()">
+    <label for="bgColor">Background Color:</label>
+    <input type="color" id="bgColor" name="bgColor" value="#000000" oninput="updateBgColor()">
+    <label for="fontSelect">Font:</label>
+    <select id="fontSelect" name="fontSelect" onchange="updateFont()">
+        <option value="Arial">Arial</option>
+        <option value="Courier New">Courier New</option>
+        <option value="Georgia">Georgia</option>
+        <option value="Times New Roman">Times New Roman</option>
+        <option value="Verdana">Verdana</option>
+    </select>
     <label for="weatherLocation">Weather Location:</label>
     <input type="text" id="weatherLocation" name="weatherLocation" placeholder="Enter city name" value="Tracy">
     <button onclick="updateWeatherLocation()">Update Weather</button>
@@ -157,6 +167,22 @@
     function updateWeatherFontSize() {
         const weatherFontSize = document.getElementById('weatherFontSize').value;
         document.getElementById('weather').style.fontSize = `${weatherFontSize}px`;
+    }
+
+    function updateTextColor() {
+        const textColor = document.getElementById('textColor').value;
+        document.getElementById('clock').style.color = textColor;
+        document.getElementById('weather').style.color = textColor;
+    }
+
+    function updateBgColor() {
+        const bgColor = document.getElementById('bgColor').value;
+        document.body.style.backgroundColor = bgColor;
+    }
+
+    function updateFont() {
+        const font = document.getElementById('fontSelect').value;
+        document.body.style.fontFamily = font;
     }
 
     let currentCity = 'Tracy';
