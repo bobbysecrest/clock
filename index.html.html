@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Clock</title>
+<style>
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column; /* Stack clock and weather vertically */
+        height: 100vh;
+        background-color: #000; /* Black background */
+        color: #fff; /* White text */
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        transition: filter 0.3s ease; /* Smooth transition for brightness change */
+    }
+    .clock {
+        font-size: 150px; /* Large font size */
+        letter-spacing: 5px;
+    }
+    .weather {
+        font-size: 40px; /* Medium font size */
+        margin-top: 20px;
+    }
+    .fullscreen-button {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #444;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+    }
+    .fullscreen-button:hover {
+        background-color: #666;
+    }
+    .settings-button {
+        position: absolute;
+        top: 20px;
+        right: 160px;
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #444;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+    }
+    .settings-button:hover {
+        background-color: #666;
+    }
+    .settings-panel {
+        display: none;
+        position: absolute;
+        top: 60px;
+        right: 20px;
+        background-color: #333;
+        color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        z-index: 1000;
+    }
+    .settings-panel input[type="range"] {
+        width: 100%;
+    }
+    .settings-panel input[type="text"] {
+        width: calc(100% - 22px);
+        padding: 5px;
+        margin-top: 10px;
+    }
+    .settings-panel label {
+        display: block;
+        margin-top: 10px;
+    }
+    .settings-panel button {
+        margin-top: 10px;
+        padding: 10px;
+        width: 100%;
+        background-color: #444;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+    }
+    .settings-panel button:hover {
+        background-color: #666;
+    }
+</style>
+</head>
+<body>
+<div id="clock" class="clock"></div>
+<div id="weather" class="weather"></div>
+<button id="fullscreenButton" class="fullscreen-button" onclick="toggleFullScreen()">Full Screen</button>
+<button id="settingsButton" class="settings-button" onclick="toggleSettings(event)">Settings</button>
+<div id="settingsPanel" class="settings-panel">
+    <label for="brightness">Brightness:</label>
+    <input type="range" id="brightness" name="brightness" min="50" max="150" value="100" oninput="updateBrightness()">
+    <label for="clockFontSize">Clock Font Size:</label>
+    <input type="range" id="clockFontSize" name="clockFontSize" min="50" max="300" value="150" oninput="updateClockFontSize()">
+    <label for="weatherFontSize">Weather Font Size:</label>
+    <input type="range" id="weatherFontSize" name="weatherFontSize" min="20" max="100" value="40" oninput="updateWeatherFontSize()">
+    <label for="weatherLocation">Weather Location:</label>
+    <input type="text" id="weatherLocation" name="weatherLocation" placeholder="Enter city name" value="Tracy">
+    <button onclick="updateWeatherLocation()">Update Weather</button>
+    <button onclick="getCurrentLocation()">Use Current Location</button>
+</div>
+<script>
+    function updateClock() {
+        const now = new Date();
+        let hours = now.getHours();
+        let minutes = now.getMinutes();
+        let seconds = now.getSeconds();
+        const amPm = hours >= 12 ? 'PM' : 'AM';
+
+        hours = hours % 12;
+        hours = hours ? hours : 12; // the hour '0' should be '12'
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+        seconds = seconds < 10 ? '0' + seconds : seconds;
+
+        const timeString = `${hours}:${minutes}:${seconds} ${amPm}`;
+        document.getElementById('clock').textContent = timeString;
+    }
+
+    setInterval(updateClock, 1000);
+    updateClock(); // Initial call to display the time immediately
+
+    function toggleFullScreen() {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen();
+        } else if (document.exitFullscreen) {
+            document.exitFullscreen();
+        }
+    }
+
+    function toggleSettings(event) {
+        event.stopPropagation();
+        const settingsPanel = document.getElementById('settingsPanel');
+        if (settingsPanel.style.display === 'none' || settingsPanel.style.display === '') {
+            settingsPanel.style.display = 'block';
+        } else {
+            settingsPanel.style.display = 'none';
+        }
+    }
+
+    function updateBrightness() {
+        const brightness = document.getElementById('brightness').value;
+        document.body.style.filter = `brightness(${brightness}%)`;
+    }
+
+    function updateClockFontSize() {
+        const clockFontSize = document.getElementById('clockFontSize').value;
+        document.getElementById('clock').style.fontSize = `${clockFontSize}px`;
+    }
+
+    function updateWeatherFontSize() {
+        const weatherFontSize = document.getElementById('weatherFontSize').value;
+        document.getElementById('weather').style.fontSize = `${weatherFontSize}px`;
+    }
+
+    let currentCity = 'Tracy';
+
+    function updateWeather() {
+        const apiKey = '599686ad88c2592f1351832190c27987'; // Replace with your OpenWeatherMap API key
+        const url = `https://api.openweathermap.org/data/2.5/weather?q=${currentCity}&appid=${apiKey}&units=imperial`;
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                const temperature = data.main.temp;
+                const weatherDescription = data.weather[0].description;
+                const weatherString = `${temperature}°F, ${weatherDescription}`;
+                document.getElementById('weather').textContent = weatherString;
+            })
+            .catch(error => {
+                console.error('Error fetching weather data:', error);
+            });
+    }
+
+    function updateWeatherLocation() {
+        currentCity = document.getElementById('weatherLocation').value;
+        updateWeather();
+    }
+
+    function getCurrentLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(position => {
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+                const apiKey = '599686ad88c2592f1351832190c27987'; // Replace with your OpenWeatherMap API key
+                const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=imperial`;
+
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                        currentCity = data.name;
+                        const temperature = data.main.temp;
+                        const weatherDescription = data.weather[0].description;
+                        const weatherString = `${temperature}°F, ${weatherDescription}`;
+                        document.getElementById('weather').textContent = weatherString;
+                        document.getElementById('weatherLocation').value = currentCity;
+                    })
+                    .catch(error => {
+                        console.error('Error fetching weather data:', error);
+                    });
+            }, error => {
+                console.error('Error getting location:', error);
+            });
+        } else {
+            alert('Geolocation is not supported by this browser.');
+        }
+    }
+
+    setInterval(updateWeather, 60000); // Update weather every minute
+    updateWeather(); // Initial call to display the weather immediately
+
+    // Detect full screen change and hide/show buttons accordingly
+    document.addEventListener('fullscreenchange', () => {
+        const isFullscreen = !!document.fullscreenElement;
+        document.getElementById('fullscreenButton').style.display = isFullscreen ? 'none' : 'block';
+        document.getElementById('settingsButton').style.display = isFullscreen ? 'none' : 'block';
+    });
+
+    document.addEventListener('click', (event) => {
+        const settingsPanel = document.getElementById('settingsPanel');
+        const settingsButton = document.getElementById('settingsButton');
+        if (!settingsPanel.contains(event.target) && !settingsButton.contains(event.target)) {
+            settingsPanel.style.display = 'none';
+        }
+    });
+</script>
+</body>
+</html>
