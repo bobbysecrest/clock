@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Clock</title>
+<title>Clock and Weather Display</title>
 <style>
     body {
         display: flex;
@@ -33,6 +33,7 @@
         color: #fff;
         border: none;
         cursor: pointer;
+        z-index: 1001; /* Increased z-index to ensure clickability */
     }
     .fullscreen-button {
         right: 20px;
@@ -187,10 +188,10 @@
         document.body.style.fontFamily = font;
     }
 
-    let currentCity = 'Tracy';
+    let currentCity = 'Tracy'; // Default city
 
     function updateWeather() {
-        const apiKey = '599686ad88c2592f1351832190c27987'; // Replace with your OpenWeatherMap API key
+        const apiKey = '599686ad88c2592f1351832190c27987'; // Replace with your actual API key
         const url = `https://api.openweathermap.org/data/2.5/weather?q=${currentCity}&appid=${apiKey}&units=imperial`;
 
         fetch(url)
@@ -216,7 +217,7 @@
             navigator.geolocation.getCurrentPosition(position => {
                 const lat = position.coords.latitude;
                 const lon = position.coords.longitude;
-                const apiKey = '599686ad88c2592f1351832190c27987'; // Replace with your OpenWeatherMap API key
+                const apiKey = 'your_api_key'; // Replace with your actual API key
                 const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=imperial`;
 
                 fetch(url)
