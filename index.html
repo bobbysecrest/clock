@@ -24,10 +24,9 @@
         font-size: 40px; /* Medium font size */
         margin-top: 20px;
     }
-    .fullscreen-button {
+    .fullscreen-button, .settings-button {
         position: absolute;
         top: 20px;
-        right: 20px;
         padding: 10px 20px;
         font-size: 16px;
         background-color: #444;
@@ -35,21 +34,13 @@
         border: none;
         cursor: pointer;
     }
-    .fullscreen-button:hover {
-        background-color: #666;
+    .fullscreen-button {
+        right: 20px;
     }
     .settings-button {
-        position: absolute;
-        top: 20px;
         right: 160px;
-        padding: 10px 20px;
-        font-size: 16px;
-        background-color: #444;
-        color: #fff;
-        border: none;
-        cursor: pointer;
     }
-    .settings-button:hover {
+    .fullscreen-button:hover, .settings-button:hover {
         background-color: #666;
     }
     .settings-panel {
@@ -85,6 +76,14 @@
     .settings-panel button:hover {
         background-color: #666;
     }
+    .top-right-corner {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 100px;
+        height: 100px;
+        z-index: 999; /* Ensure this area is on top */
+    }
 </style>
 </head>
 <body>
@@ -115,7 +114,10 @@
     <input type="text" id="weatherLocation" name="weatherLocation" placeholder="Enter city name" value="Tracy">
     <button onclick="updateWeatherLocation()">Update Weather</button>
     <button onclick="getCurrentLocation()">Use Current Location</button>
+    <label for="hideButtons">Hide Buttons:</label>
+    <input type="checkbox" id="hideButtons" name="hideButtons" onclick="toggleButtons()">
 </div>
+<div class="top-right-corner" onclick="showButtons()"></div>
 <script>
     function updateClock() {
         const now = new Date();
@@ -241,6 +243,18 @@
     setInterval(updateWeather, 60000); // Update weather every minute
     updateWeather(); // Initial call to display the weather immediately
 
+    function toggleButtons() {
+        const hideButtons = document.getElementById('hideButtons').checked;
+        document.getElementById('fullscreenButton').style.display = hideButtons ? 'none' : 'block';
+        document.getElementById('settingsButton').style.display = hideButtons ? 'none' : 'block';
+    }
+
+    function showButtons() {
+        document.getElementById('fullscreenButton').style.display = 'block';
+        document.getElementById('settingsButton').style.display = 'block';
+        document.getElementById('hideButtons').checked = false;
+    }
+
     // Detect full screen change and hide/show buttons accordingly
     document.addEventListener('fullscreenchange', () => {
         const isFullscreen = !!document.fullscreenElement;
@@ -255,6 +269,10 @@
             settingsPanel.style.display = 'none';
         }
     });
+
+    // Add event listener to the top-right corner for bringing back the buttons
+    document.querySelector('.top-right-corner').addEventListener('click', showButtons);
 </script>
 </body>
 </html>
+
