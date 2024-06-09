@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <title>Clock and Weather Display</title>
 <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=VT323&family=Major+Mono+Display&family=Share+Tech+Mono&family=Nova+Mono&display=swap');
     body {
         display: flex;
         justify-content: center;
@@ -110,6 +111,11 @@
         <option value="Georgia">Georgia</option>
         <option value="Times New Roman">Times New Roman</option>
         <option value="Verdana">Verdana</option>
+        <option value="Orbitron">Orbitron</option>
+        <option value="VT323">VT323</option>
+        <option value="Major Mono Display">Major Mono Display</option>
+        <option value="Share Tech Mono">Share Tech Mono</option>
+        <option value="Nova Mono">Nova Mono</option>
     </select>
     <label for="weatherLocation">Weather Location:</label>
     <input type="text" id="weatherLocation" name="weatherLocation" placeholder="Enter city name" value="Tracy">
@@ -117,6 +123,8 @@
     <button onclick="getCurrentLocation()">Use Current Location</button>
     <label for="hideButtons">Hide Buttons:</label>
     <input type="checkbox" id="hideButtons" name="hideButtons" onclick="toggleButtons()">
+    <label for="hideWeather">Hide Weather:</label>
+    <input type="checkbox" id="hideWeather" name="hideWeather" onclick="toggleWeather()">
 </div>
 <div class="top-right-corner" onclick="showButtons()"></div>
 <script>
@@ -254,6 +262,11 @@
         document.getElementById('fullscreenButton').style.display = 'block';
         document.getElementById('settingsButton').style.display = 'block';
         document.getElementById('hideButtons').checked = false;
+    }
+
+    function toggleWeather() {
+        const hideWeather = document.getElementById('hideWeather').checked;
+        document.getElementById('weather').style.display = hideWeather ? 'none' : 'block';
     }
 
     // Detect full screen change and hide/show buttons accordingly
