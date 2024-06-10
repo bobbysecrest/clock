@@ -25,6 +25,10 @@
         font-size: 40px; /* Medium font size */
         margin-top: 20px;
     }
+    .news {
+        margin-top: 20px;
+        display: none; /* Hide news by default */
+    }
     .fullscreen-button, .settings-button {
         position: absolute;
         top: 20px;
@@ -97,6 +101,9 @@
 <body>
 <div id="clock" class="clock"></div>
 <div id="weather" class="weather"></div>
+<div id="news" class="news">
+    <iframe id="newsIframe" width="560" height="315" src="https://www.youtube.com/embed/RhLFAUExHuQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
 <button id="fullscreenButton" class="fullscreen-button" onclick="toggleFullScreen()">Full Screen</button>
 <button id="settingsButton" class="settings-button" onclick="toggleSettings(event)">Settings</button>
 <div id="settingsPanel" class="settings-panel">
@@ -131,6 +138,10 @@
     <input type="checkbox" id="hideButtons" name="hideButtons" onclick="toggleButtons()">
     <label for="hideWeather">Hide Weather:</label>
     <input type="checkbox" id="hideWeather" name="hideWeather" onclick="toggleWeather()">
+    <label for="hideNews">Display News:</label>
+    <input type="checkbox" id="hideNews" name="hideNews" onclick="toggleNews()">
+    <label for="newsSize">News Screen Size:</label>
+    <input type="range" id="newsSize" name="newsSize" min="100" max="1000" value="560" oninput="updateNewsSize()">
     <p class="venmo-message">Venmo - @RobertSecrest</p> <!-- Venmo message added here -->
 </div>
 <div class="top-right-corner" onclick="showButtons()"></div>
@@ -276,6 +287,18 @@
         document.getElementById('weather').style.display = hideWeather ? 'none' : 'block';
     }
 
+    function toggleNews() {
+        const hideNews = document.getElementById('hideNews').checked;
+        document.getElementById('news').style.display = hideNews ? 'block' : 'none';
+    }
+
+    function updateNewsSize() {
+        const newsSize = document.getElementById('newsSize').value;
+        const newsIframe = document.getElementById('newsIframe');
+        newsIframe.width = newsSize;
+        newsIframe.height = newsSize * 0.5625; // Maintain 16:9 aspect ratio
+    }
+
     // Detect full screen change and hide/show buttons accordingly
     document.addEventListener('fullscreenchange', () => {
         const isFullscreen = !!document.fullscreenElement;
@@ -296,4 +319,5 @@
 </script>
 </body>
 </html>
+
 
