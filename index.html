@@ -102,7 +102,7 @@
 <div id="clock" class="clock"></div>
 <div id="weather" class="weather"></div>
 <div id="news" class="news">
-    <iframe id="newsIframe" width="560" height="315" src="https://www.youtube.com/embed/RhLFAUExHuQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    <iframe id="newsIframe" width="560" height="315" src="https://www.youtube.com/embed/-mvUkiILTqI" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </div>
 <button id="fullscreenButton" class="fullscreen-button" onclick="toggleFullScreen()">Full Screen</button>
 <button id="settingsButton" class="settings-button" onclick="toggleSettings(event)">Settings</button>
@@ -316,6 +316,13 @@
 
     // Add event listener to the top-right corner for bringing back the buttons
     document.querySelector('.top-right-corner').addEventListener('click', showButtons);
+    
+        // Additional code: key event listener for 'f' key to toggle full screen
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'f' || event.key === 'F') { // Listens for 'f' or 'F'
+            toggleFullScreen();
+        }
+    });
 </script>
 </body>
 </html>
